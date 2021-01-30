@@ -46,7 +46,7 @@ function Main(props) {
           <button
             className="button profile__edit-avatar-button"
             onClick={props.onEditAvatar}
-          ></button>
+          ></button> 
         </div>
         <div className="profile__text">
           <div className="profile__name-container">
