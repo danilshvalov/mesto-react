@@ -3,7 +3,7 @@ import api from "../utils/api";
 import defaultAvatar from "../images/avatar.svg";
 import Card from "./Card";
 
-function Main(props) {
+function Main({onMessage, onEditAvatar, onAddPlace, onCardClick, onEditProfile}) {
   const [userName, setUserName] = React.useState();
   const [userDescription, setUserDescription] = React.useState();
   const [userAvatar, setUserAvatar] = React.useState();
@@ -14,13 +14,13 @@ function Main(props) {
       .then((data) => callback(data))
       .catch((error) => {
         if (error instanceof TypeError) {
-          props.onMessage(
+          onMessage(
             "Потеряно соединение с сервером, повторите попытку позднее"
           );
         } else if (typeof error === "string") {
-          props.onMessage(error);
+          onMessage(error);
         } else {
-          props.onMessage("Непредвиденная ошибка, повторите попытку позднее");
+          onMessage("Непредвиденная ошибка, повторите попытку позднее");
         }
       });
   };
@@ -45,7 +45,7 @@ function Main(props) {
           />
           <button
             className="button profile__edit-avatar-button"
-            onClick={props.onEditAvatar}
+            onClick={onEditAvatar}
           ></button> 
         </div>
         <div className="profile__text">
@@ -53,7 +53,7 @@ function Main(props) {
             <h1 className="profile__name">{userName}</h1>
             <button
               className="button button_type_edit profile__edit-button"
-              onClick={props.onEditProfile}
+              onClick={onEditProfile}
               type="button"
             ></button>
           </div>
@@ -61,7 +61,7 @@ function Main(props) {
         </div>
         <button
           className="button button_type_add profile__add-button"
-          onClick={props.onAddPlace}
+          onClick={onAddPlace}
           type="button"
         ></button>
       </section>
@@ -69,7 +69,7 @@ function Main(props) {
       <section className="elements">
         {cards.map((data) => {
           return (
-            <Card card={data} key={data._id} onCardClick={props.onCardClick} />
+            <Card card={data} key={data._id} onCardClick={onCardClick} />
           );
         })}
       </section>

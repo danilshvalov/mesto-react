@@ -1,14 +1,14 @@
-function MessagePopup(props) {
+function MessagePopup({message, isOpen, onClose}) {
   return (
-    <div className={`popup popup_type_message ${props.isOpen && "popup_opened"}`}>
+    <div className={`popup popup_type_message ${isOpen && "popup_opened"}`}>
       <div className="popup__container">
         <div className="popup__message-box message-box">
-          <span className="message-box__text">{props.message}</span>
+          <span className="message-box__text">{message}</span>
         </div>
         <button
           className="popup__close-button popup__close-button_indent button button_type_close button_small-size button_inverted-color"
           type="button"
-          onClick={props.onClose}
+          onClick={onClose}
         ></button>
       </div>
     </div>
