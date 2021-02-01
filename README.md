@@ -1,6 +1,25 @@
-# Getting Started with Create React App
+# Mesto-React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Нажмите [СЮДА](https://danilshvalov.github.io/mesto-react/) для перехода на сайт.
+
+## Обзор
+Mesto - это небольшая социальная сеть, в которой любой пользователь может создать карточку с фотографией, например, какого-нибудь красивого места, или оценить карточку другого пользователя.
+Проект сделан по программе обучения в Яндекс.Практикум.
+
+
+## Технологии, которые были использованы в проекте: 
+* Вёрстка по макету в Figma
+* Grid Layout
+* Flex-контейнеры
+* Псевдоклассы
+* Методология БЭМ
+* Отзывчивая и адаптивная вёрстка
+* Медиа-запросы
+* Nested BEM
+* Babel
+* React
+* WebPack
+* Работа с сервером
 
 ## Available Scripts
 
