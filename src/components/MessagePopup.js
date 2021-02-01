@@ -8,7 +8,7 @@ function MessagePopup(props) {
         <button
           className="popup__close-button popup__close-button_indent button button_type_close button_small-size button_inverted-color"
           type="button"
-          onClick={props.onClick}
+          onClick={props.onClose}
         ></button>
       </div>
     </div>

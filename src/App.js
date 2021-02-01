@@ -19,6 +19,8 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState();
   const [popupMessage, setPopupMessage] = React.useState();
 
+  // MessagePopup используется для выведения ошибок пользователю
+
   const openMessagePopup = (message) => {
     setPopupMessage(message);
     setMessagePopupOpen(true);
@@ -42,7 +44,7 @@ function App() {
   };
 
   const closeMessagePopup = () => {
-    setImagePopupOpen(false);
+    setMessagePopupOpen(false);
   };
 
   const closeAllPopups = () => {
@@ -51,7 +53,6 @@ function App() {
     setAddPlacePopupOpen(false);
     setConfirmPopupOpen(false);
     setImagePopupOpen(false);
-    setMessagePopupOpen(false);
   };
 
   return (
