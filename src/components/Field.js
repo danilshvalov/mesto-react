@@ -1,7 +1,7 @@
 import React from "react";
 import getOnlyDOMProps from "../utils/utils";
 
-const Field = (props) => {
+const Field = React.memo((props) => {
   // states
   const [isValid, setValid] = React.useState(false);
   const [value, setValue] = React.useState(props.defaultValue);
@@ -20,10 +20,10 @@ const Field = (props) => {
       setErrorMessage(inputRef.current.validationMessage);
       setErrorVisible(false);
     }
-  }, [props.isVisible]);
+  }, [props.isVisible, props.defaultValue]);
   React.useEffect(() => {
     props.onInput({ value, isValid });
-  }, [value, isValid]);
+  }, [value, isValid, props]);
 
   // handlers
   const handleInput = (evt) => {
@@ -55,6 +55,6 @@ const Field = (props) => {
       </span>
     </div>
   );
-};
+});
 
 export default Field;

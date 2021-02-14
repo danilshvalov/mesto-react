@@ -10,12 +10,7 @@ function Popup({ name, children, onClose, isOpen }) {
   const closeButtonRef = React.useRef();
 
   // handlers
-  const escapeButtonHandler = (evt) => {
-    if (evt.key === escapeKeyCode) {
-      onClose();
-      document.removeEventListener("keydown", escapeButtonHandler);
-    }
-  };
+
   const handleClose = (evt) => {
     if (
       evt.target === popupWrapperRef.current ||
@@ -28,10 +23,16 @@ function Popup({ name, children, onClose, isOpen }) {
 
   // effects
   React.useEffect(() => {
+    const escapeButtonHandler = (evt) => {
+      if (evt.key === escapeKeyCode) {
+        onClose();
+        document.removeEventListener("keydown", escapeButtonHandler);
+      }
+    };
     if (isOpen) {
       document.addEventListener("keydown", escapeButtonHandler);
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
   return (
     <div
       className={`popup popup_type_${name} ${isOpen && "popup_opened"}`}
@@ -44,7 +45,7 @@ function Popup({ name, children, onClose, isOpen }) {
           className="button button_type_close popup__close-button"
           type="button"
           ref={closeButtonRef}
-        ></button>
+        />
       </div>
     </div>
   );

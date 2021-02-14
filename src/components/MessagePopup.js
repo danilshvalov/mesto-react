@@ -9,7 +9,7 @@ function MessagePopup({message, isOpen, onClose}) {
           className="popup__close-button popup__close-button_indent button button_type_close button_small-size button_inverted-color"
           type="button"
           onClick={onClose}
-        ></button>
+        />
       </div>
     </div>
   );

@@ -27,7 +27,7 @@ function Main({
           <button
             className="button profile__edit-avatar-button"
             onClick={onEditAvatar}
-          ></button>
+          />
         </div>
         <div className="profile__text">
           <div className="profile__name-container">
@@ -36,7 +36,7 @@ function Main({
               className="button button_type_edit profile__edit-button"
               onClick={onEditProfile}
               type="button"
-            ></button>
+            />
           </div>
           <p className="profile__about">{currentUser.about}</p>
         </div>
@@ -44,7 +44,7 @@ function Main({
           className="button button_type_add profile__add-button"
           onClick={onAddPlace}
           type="button"
-        ></button>
+        />
       </section>
 
       <section className="elements">

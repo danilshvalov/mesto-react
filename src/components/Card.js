@@ -44,14 +44,14 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
             className={cardLikeButtonClassName}
             onClick={handleLike}
             type="button"
-          ></button>
+          />
           <span className="element__like-count">{card.likes.length}</span>
         </div>
         <button
           className={cardDeleteButtonClassName}
           onClick={handleDelete}
           type="button"
-        ></button>
+        />
       </div>
     </article>
   );
