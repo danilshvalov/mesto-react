@@ -2,13 +2,16 @@ import React from "react";
 import getOnlyDOMProps from "../utils/utils";
 
 const Field = (props) => {
+  // states
   const [isValid, setValid] = React.useState(false);
   const [value, setValue] = React.useState(props.defaultValue);
   const [errorMessage, setErrorMessage] = React.useState("");
   const [isErrorVisible, setErrorVisible] = React.useState(false);
 
+  // refs
   const inputRef = React.useRef();
 
+  // effects
   React.useEffect(() => {
     if (props.isVisible) {
       inputRef.current.value = props.defaultValue;
@@ -18,11 +21,11 @@ const Field = (props) => {
       setErrorVisible(false);
     }
   }, [props.isVisible]);
-
   React.useEffect(() => {
     props.onInput({ value, isValid });
   }, [value, isValid]);
 
+  // handlers
   const handleInput = (evt) => {
     const target = evt.target;
     setValue(target.value);

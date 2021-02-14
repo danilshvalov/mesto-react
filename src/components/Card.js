@@ -16,7 +16,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
     isLiked ? "button_like-active" : ""
   }`;
 
-  // functions
+  // handlers
   const handleClick = () => {
     onCardClick(card);
   };
