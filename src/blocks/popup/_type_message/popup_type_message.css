@@ -11,9 +11,9 @@
   height: 10vh;
 
   left: auto;
-  top: auto;
-  right: 1vw;
-  bottom: 1vh;
+  top: calc(100% - 100px);
+  right: 20px;
+  bottom: auto;
 
   margin: 0;
   padding: 0;

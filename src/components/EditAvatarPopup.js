@@ -1,15 +1,27 @@
 import React from "react";
-import Field from "../Field";
-import PopupWithForm from "../PopupWithForm";
-import SubmitButton from "../SubmitButton";
-import {
-  popupSettings,
-  submitButtonSettings,
-  avatarInputSettings,
-} from "./constants";
+import Field from "./Field";
+import PopupWithForm from "./PopupWithForm";
+import SubmitButton from "./SubmitButton";
 
 function EditAvatarPopup({ onClose, isOpen, onUpdateAvatar }) {
-  // ref используется внутри Field
+  // constants
+  const popupSettings = {
+    name: "change-avatar",
+    title: "Обновить аватар",
+  };
+  const submitButtonSettings = {
+    defaultText: "Сохранить",
+    loadingText: "Сохранение...",
+    className: "form__submit-button",
+  };
+  const avatarInputSettings = {
+    name: "avatar",
+    type: "url",
+    defaultValue: "",
+    placeholder: "Ссылка на картинку",
+    required: true,
+  };
+
   // states
   const [avatarInput, setAvatarInput] = React.useState({
     value: "",

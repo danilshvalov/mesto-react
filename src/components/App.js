@@ -5,12 +5,12 @@ import Header from "./Header";
 import ImagePopup from "./ImagePopup";
 import Main from "./Main";
 import MessagePopup from "./MessagePopup";
-import EditProfilePopup from "./EditProfilePopup/";
-import AddPlacePopup from "./AddPlacePopup/";
-import EditAvatarPopup from "./EditAvatarPopup/";
+import EditProfilePopup from "./EditProfilePopup";
+import AddPlacePopup from "./AddPlacePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import LoadingSpinner from "./LoadingSpinner";
-import ConfirmPopup from "./ConfirmPopup/";
+import ConfirmPopup from "./ConfirmPopup";
 
 function App() {
   // states

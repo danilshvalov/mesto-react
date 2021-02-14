@@ -1,15 +1,36 @@
 import React from "react";
-import Field from "../Field";
-import PopupWithForm from "../PopupWithForm";
-import SubmitButton from "../SubmitButton";
-import {
-  popupSettings,
-  submitButtonSettings,
-  titleInputSettings,
-  linkInputSettings,
-} from "./constants";
+import Field from "./Field";
+import PopupWithForm from "./PopupWithForm";
+import SubmitButton from "./SubmitButton";
 
 function AddPlacePopup({ onClose, isOpen, onAddPlace }) {
+  // constants
+  const popupSettings = {
+    name: "add-element",
+    title: "Новое место",
+  };
+  const submitButtonSettings = {
+    defaultText: "Добавить",
+    loadingText: "Добавляем...",
+    className: "form__submit-button",
+  };
+  const titleInputSettings = {
+    name: "title",
+    type: "text",
+    defaultValue: "",
+    placeholder: "Название",
+    minLength: "2",
+    maxLength: "30",
+    required: true,
+  };
+  const linkInputSettings = {
+    name: "link",
+    type: "url",
+    defaultValue: "",
+    placeholder: "Ссылка на картинку",
+    required: true,
+  };
+
   // states
   const [titleInput, setTitleInput] = React.useState({
     value: "",
