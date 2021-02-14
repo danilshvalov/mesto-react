@@ -79,4 +79,6 @@
 @import url(./blocks/popup/_type_message/popup_type_message.css);
 @import url(./blocks/popup/__change-avatar-form/popup__change-avatar-form.css);
 
+@import url(./blocks/loading-spinner/loading-spinner.css);
+
 

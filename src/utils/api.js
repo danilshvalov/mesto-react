@@ -25,7 +25,7 @@ export class Api {
     });
   }
 
-  addCard({ name, link }) {
+  addPlace({ name, link }) {
     return this.sendRequest({
       path: "cards",
       method: "POST",
@@ -61,14 +61,18 @@ export class Api {
     });
   }
 
-  getProfileData() {
+  changeLikeCardStatus(id, isLiked) {
+    return isLiked ? this.setLike(id) : this.removeLike(id);
+  }
+
+  getUserInfo() {
     return this.sendRequest({
       path: "users/me",
       errorMessage: "При получении данных профиля произошла ошибка",
     });
   }
 
-  editProfile({ name, about }) {
+  setUserInfo({ name, about }) {
     return this.sendRequest({
       path: "users/me",
       method: "PATCH",

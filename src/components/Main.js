@@ -1,38 +1,19 @@
 import React from "react";
-import api from "../utils/api";
 import defaultAvatar from "../images/avatar.svg";
 import Card from "./Card";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
-function Main({onMessage, onEditAvatar, onAddPlace, onCardClick, onEditProfile}) {
-  const [userName, setUserName] = React.useState();
-  const [userDescription, setUserDescription] = React.useState();
-  const [userAvatar, setUserAvatar] = React.useState();
-  const [cards, setCards] = React.useState([]);
-
-  const handleApiError = (promise, callback) => {
-    promise
-      .then((data) => callback(data))
-      .catch((error) => {
-        if (error instanceof TypeError) {
-          onMessage(
-            "Потеряно соединение с сервером, повторите попытку позднее"
-          );
-        } else if (typeof error === "string") {
-          onMessage(error);
-        } else {
-          onMessage("Непредвиденная ошибка, повторите попытку позднее");
-        }
-      });
-  };
-
-  React.useEffect(() => {
-    handleApiError(api.getProfileData(), ({ name, about, avatar }) => {
-      setUserName(name);
-      setUserDescription(about);
-      setUserAvatar(avatar);
-    });
-    handleApiError(api.getInitialCards(), (data) => setCards(data));
-  }, []);
+function Main({
+  cards,
+  onEditAvatar,
+  onAddPlace,
+  onCardClick,
+  onCardLike,
+  onCardDelete,
+  onEditProfile,
+}) {
+  // contexts
+  const currentUser = React.useContext(CurrentUserContext);
 
   return (
     <main className="content">
@@ -40,24 +21,24 @@ function Main({onMessage, onEditAvatar, onAddPlace, onCardClick, onEditProfile})
         <div className="profile__image-container">
           <img
             className="profile__avatar"
-            src={userAvatar || defaultAvatar}
+            src={currentUser.avatar || defaultAvatar}
             alt="Аватар пользователя"
           />
           <button
             className="button profile__edit-avatar-button"
             onClick={onEditAvatar}
-          ></button> 
+          ></button>
         </div>
         <div className="profile__text">
           <div className="profile__name-container">
-            <h1 className="profile__name">{userName}</h1>
+            <h1 className="profile__name">{currentUser.name}</h1>
             <button
               className="button button_type_edit profile__edit-button"
               onClick={onEditProfile}
               type="button"
             ></button>
           </div>
-          <p className="profile__about">{userDescription}</p>
+          <p className="profile__about">{currentUser.about}</p>
         </div>
         <button
           className="button button_type_add profile__add-button"
@@ -69,7 +50,13 @@ function Main({onMessage, onEditAvatar, onAddPlace, onCardClick, onEditProfile})
       <section className="elements">
         {cards.map((data) => {
           return (
-            <Card card={data} key={data._id} onCardClick={onCardClick} />
+            <Card
+              card={data}
+              key={data._id}
+              onCardLike={onCardLike}
+              onCardClick={onCardClick}
+              onCardDelete={onCardDelete}
+            />
           );
         })}
       </section>

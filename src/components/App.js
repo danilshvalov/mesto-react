@@ -1,13 +1,20 @@
 import React from "react";
-
+import api from "../utils/api";
 import Footer from "./Footer";
 import Header from "./Header";
 import ImagePopup from "./ImagePopup";
 import Main from "./Main";
 import MessagePopup from "./MessagePopup";
-import PopupWithForm from "./PopupWithForm";
+import EditProfilePopup from "./EditProfilePopup/";
+import AddPlacePopup from "./AddPlacePopup/";
+import EditAvatarPopup from "./EditAvatarPopup/";
+import CurrentUserContext from "../contexts/CurrentUserContext";
+import LoadingSpinner from "./LoadingSpinner";
+import ConfirmPopup from "./ConfirmPopup/";
 
 function App() {
+  // states
+  const [isAppLoading, setIsAppLoading] = React.useState(true);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(
     false
   );
@@ -18,31 +25,105 @@ function App() {
   const [isImagePopupOpen, setImagePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState();
   const [popupMessage, setPopupMessage] = React.useState();
+  const [currentUser, setCurrentUser] = React.useState({
+    name: "",
+    about: "",
+    avatar: "",
+    _id: "",
+  });
+  const [cards, setCards] = React.useState([]);
+  const [
+    cardCandidateForDeletion,
+    setCardCandidateForDeletion,
+  ] = React.useState();
 
-  // MessagePopup используется для выведения ошибок пользователю
+  // effects
+  React.useEffect(() => {
+    handleApiError(
+      Promise.all([api.getUserInfo(), api.getInitialCards()]),
+      (result) => {
+        const [userInfo, initialCards] = result;
+        setCurrentUser(userInfo);
+        setCards(initialCards);
+        setIsAppLoading(false);
+      }
+    );
+  }, []);
 
-  const openMessagePopup = (message) => {
-    setPopupMessage(message);
-    setMessagePopupOpen(true);
+  // handlers
+  const handleApiError = (promise, callback) => {
+    return promise
+      .then((data) => callback(data))
+      .catch((error) => {
+        if (error instanceof TypeError) {
+          setPopupMessage(
+            "Потеряно соединение с сервером, повторите попытку позднее"
+          );
+        } else if (typeof error === "string") {
+          setPopupMessage(error);
+        } else {
+          setPopupMessage("Непредвиденная ошибка, повторите попытку позднее");
+        }
+        setMessagePopupOpen(true);
+      });
+  };
+  const handleUpdateUser = (data) => {
+    return handleApiError(api.setUserInfo(data), (userInfo) => {
+      setCurrentUser(userInfo);
+      setEditProfilePopupOpen(false);
+    });
+  };
+  const handleAddPlace = (data) => {
+    return handleApiError(api.addPlace(data), (newCard) => {
+      setCards([newCard, ...cards]);
+      setAddPlacePopupOpen(false);
+    });
+  };
+  const handleUpdateAvatar = (data) => {
+    return handleApiError(api.changeAvatar(data.avatar), ({ avatar }) => {
+      currentUser.avatar = avatar;
+      setEditAvatarPopupOpen(false);
+    });
   };
 
+  // button-handlers
   const handleEditAvatarClick = () => {
     setEditAvatarPopupOpen(true);
   };
-
   const handleEditProfileClick = () => {
     setEditProfilePopupOpen(true);
   };
-
   const handleAddPlaceClick = () => {
     setAddPlacePopupOpen(true);
   };
+  // ---------------------------------------------------------------
 
+  // card-handlers
   const handleCardClick = (card) => {
     setSelectedCard(card);
     setImagePopupOpen(true);
   };
+  const handleCardLike = (card) => {
+    const isLiked = card.likes.some((user) => user._id === currentUser._id);
+    handleApiError(api.changeLikeCardStatus(card._id, !isLiked), (newCard) => {
+      setCards(
+        cards.map((oldCard) => (oldCard._id === card._id ? newCard : oldCard))
+      );
+    });
+  };
+  const handleCardDeleteClick = (card) => {
+    setCardCandidateForDeletion(card);
+    setConfirmPopupOpen(true);
+  };
+  const handleCardDelete = (card) => {
+    return handleApiError(api.deleteCard(card._id), () => {
+      setCards(cards.filter((oldCard) => oldCard._id !== card._id));
+      setConfirmPopupOpen(false);
+    });
+  };
+  // ---------------------------------------------------------------
 
+  // functions
   const closeMessagePopup = () => {
     setMessagePopupOpen(false);
   };
@@ -57,139 +138,57 @@ function App() {
 
   return (
     <div className="page">
-      <Header />
-      <Main
-        onEditProfile={handleEditProfileClick}
-        onAddPlace={handleAddPlaceClick}
-        onEditAvatar={handleEditAvatarClick}
-        onCardClick={handleCardClick}
-        onMessage={openMessagePopup}
-      />
-      <Footer />
-
-      <PopupWithForm
-        name="edit-profile"
-        title="Редактировать профиль"
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
-        submitButtonText="Сохранить"
-      >
-        <fieldset className="fieldset form__edit-profile-fieldset">
-          <div className="field fieldset__field">
-            <input
-              className="field__input"
-              id="name-input"
-              name="nameInput"
-              type="text"
-              defaultValue=""
-              placeholder="Имя"
-              required
-              minLength="2"
-              maxLength="40"
+      <CurrentUserContext.Provider value={currentUser}>
+        <Header />
+        {isAppLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            <Main
+              cards={cards}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDeleteClick}
             />
-            <span className="field__error-message" id="name-input-error"></span>
-          </div>
-          <div className="field fieldset__field">
-            <input
-              className="field__input"
-              id="job-input"
-              name="jobInput"
-              type="text"
-              defaultValue=""
-              placeholder="Деятельность"
-              required
-              minLength="2"
-              maxLength="200"
+            <EditProfilePopup
+              isOpen={isEditProfilePopupOpen}
+              onClose={closeAllPopups}
+              onUpdateUser={handleUpdateUser}
             />
-            <span className="field__error-message" id="job-input-error"></span>
-          </div>
-        </fieldset>
-      </PopupWithForm>
-      <PopupWithForm
-        name="add-element"
-        title="Новое место"
-        isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
-        submitButtonText="Создать"
-      >
-        <fieldset className="fieldset form__add-element-fieldset">
-          <div className="field fieldset__field">
-            <input
-              className="field__input"
-              id="title-input"
-              name="titleInput"
-              type="text"
-              defaultValue=""
-              placeholder="Название"
-              required
-              minLength="1"
-              maxLength="30"
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
+              onClose={closeAllPopups}
+              onAddPlace={handleAddPlace}
             />
-            <span
-              className="field__error-message"
-              id="title-input-error"
-            ></span>
-          </div>
-          <div className="field fieldset__field">
-            <input
-              className="field__input"
-              id="link-input"
-              name="linkInput"
-              type="url"
-              defaultValue=""
-              placeholder="Ссылка на картинку"
-              required
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
+              onClose={closeAllPopups}
+              onUpdateAvatar={handleUpdateAvatar}
             />
-            <span className="field__error-message" id="link-input-error"></span>
-          </div>
-        </fieldset>
-      </PopupWithForm>
-
-      <PopupWithForm
-        name="change-avatar"
-        title="Обновить аватар"
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-        submitButtonText="Сохранить"
-      >
-        <fieldset className="fieldset form__change-avatar-fieldset">
-          <div className="field fieldset__field">
-            <input
-              className="field__input"
-              id="avatar-input"
-              name="avatarInput"
-              type="url"
-              defaultValue=""
-              placeholder="Ссылка на картинку"
-              required
+            <ImagePopup
+              {...selectedCard}
+              isOpen={isImagePopupOpen}
+              onClose={closeAllPopups}
             />
-            <span
-              className="field__error-message"
-              id="avatar-input-error"
-            ></span>
-          </div>
-        </fieldset>
-      </PopupWithForm>
+            <MessagePopup
+              isOpen={isMessagePopupOpen}
+              onClose={closeMessagePopup}
+              message={popupMessage}
+            />
+            <ConfirmPopup
+              card={cardCandidateForDeletion}
+              onCardDelete={handleCardDelete}
+              isOpen={isConfirmPopupOpen}
+              onClose={closeAllPopups}
+            />
+          </>
+        )}
 
-      <PopupWithForm
-        name="confirm"
-        title="Вы уверены?"
-        isOpen={isConfirmPopupOpen}
-        onClose={closeAllPopups}
-        submitButtonText="Да"
-      ></PopupWithForm>
-
-      <ImagePopup
-        {...selectedCard}
-        isOpen={isImagePopupOpen}
-        onClose={closeAllPopups}
-      />
-
-      <MessagePopup
-        isOpen={isMessagePopupOpen}
-        onClose={closeMessagePopup}
-        message={popupMessage}
-      />
+        <Footer />
+      </CurrentUserContext.Provider>
     </div>
   );
 }

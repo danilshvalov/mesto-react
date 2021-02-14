@@ -1,0 +1,8 @@
+.loading-spinner {
+  width: 100vw;
+  height: 100vh;
+  background-image: url(../../images/loading.svg);
+  background-repeat: no-repeat;
+  background-position: center 15vh;
+  background-size: min(8vw, 8vh);
+}
