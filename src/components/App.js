@@ -15,6 +15,8 @@ import ConfirmPopup from "./ConfirmPopup";
 function App() {
   // states
   const [isAppLoading, setIsAppLoading] = React.useState(true);
+  const [isDOMLoading, setDOMLoading] = React.useState(true);
+  const [isApiDataLoading, setApiDataLoading] = React.useState(true);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(
     false
   );
@@ -37,6 +39,9 @@ function App() {
     setCardCandidateForDeletion,
   ] = React.useState();
 
+  document.addEventListener("DOMContentLoaded", () => {
+    setDOMLoading(false);
+  });
   // effects
   React.useEffect(() => {
     handleApiError(
@@ -45,10 +50,13 @@ function App() {
         const [userInfo, initialCards] = result;
         setCurrentUser(userInfo);
         setCards(initialCards);
-        setIsAppLoading(false);
+        setApiDataLoading(false);
       }
     );
   }, []);
+  React.useEffect(() => {
+    setIsAppLoading(isApiDataLoading || isDOMLoading);
+  }, [isApiDataLoading, isDOMLoading]);
 
   // handlers
   const handleApiError = (promise, callback) => {
@@ -137,7 +145,7 @@ function App() {
   };
 
   return (
-    <div className="page">
+    <>
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
         {isAppLoading ? (
@@ -189,7 +197,7 @@ function App() {
 
         <Footer />
       </CurrentUserContext.Provider>
-    </div>
+    </>
   );
 }
 
